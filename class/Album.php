@@ -21,7 +21,7 @@ class Album extends Extension
 	public function defineOrm(PrototypeAssociationMap $aAssocMap)
 	{
 	}
-	
+	fdsfsd
 }
 
 ?><? ?>
