@@ -32,8 +32,10 @@ class AddPhoto extends Controller {
 		$this->createFormView("AddPhoto");
         //model
 		$this->createModel('photo');
-		$this->createModel('album',null,true);
-		$this->modelAlbum->setLimit(-1);
+		$this->createModel('album',array(),true);
+//		$this->modelAlbum->setLimit();
+		$arrModel = $this->modelAlbum->childIterator();
+		var_dump($arrModel);exit();
 		$this->viewAddPhoto->setModel($this->modelPhoto);
         
 		$photoName = new Text('photoname','照片标题','',TEXT::single);
