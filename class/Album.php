@@ -12,8 +12,11 @@ class Album extends Extension
 	{
 		// 定义ORM
         $this->defineOrm(PrototypeAssociationMap::singleton()) ;
-         //加载相册控制器
-        $this->application()->accessRouter()->addController("oc\\ext\\album\\addPhoto",'AddPhoto');
+        
+        
+        $this->application()->accessRouter()->addController("oc\\ext\\album\\AddPhoto",'addPhoto');
+        
+        $this->application()->accessRouter()->addController("oc\\ext\\album\\AddAlbum",'addAlbum');
 	}
 	
 	/**
