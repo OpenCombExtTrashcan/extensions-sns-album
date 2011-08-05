@@ -22,8 +22,13 @@ class Album extends Extension
 		$this->application()->accessRouter()->addController("oc\\ext\\album\\AddPhoto",'addPhoto');
         
 		$this->application()->accessRouter()->addController("oc\\ext\\album\\AddAlbum",'addAlbum');
+		
+		//相册管理
+		$this->application()->accessRouter()->addController("oc\\ext\\album\\AlbumManage",'albumManage');
+		$this->application()->accessRouter()->addController("oc\\ext\\album\\EditAlbum",'editAlbum');
+		$this->application()->accessRouter()->addController("oc\\ext\\album\\PhotoManage",'photoManage');
         
-//		$this->application()->accessRouter()->setDefaultController('albumList') ;
+		$this->application()->accessRouter()->addController("oc\\ext\\album\\EditPhoto",'editPhoto');
 	}
 	
 	/**

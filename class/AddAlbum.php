@@ -41,7 +41,7 @@ class AddAlbum extends Controller {
     	//必须登录,不登录不让玩
 		$this->requireLogined() ;
 		
-    	if ($this->viewAddAlbum->isSubmit ( $this->aParams )) {
+		if ($this->viewAddAlbum->isSubmit ( $this->aParams )) {
     		
 			do {
 				$this->viewAddAlbum->loadWidgets ( $this->aParams );

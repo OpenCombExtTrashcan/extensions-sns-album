@@ -1,0 +1,26 @@
+<div class="">
+	<div class='navForAddPhoto'>
+		<a href="?c=album.albumList" >返回相册列表</a>
+	</div>
+
+	<div class='photoUpdateNotice'>
+		<p>允许图片格式:JPG,PNG,GIF</p>
+		<p>允许图片大小上限:1M</p>
+	</div>
+	
+	<msgqueue for="$theController->messageQueue()" />
+	
+	<form id="addPhotoForm" enctype="multipart/form-data" method='post'>
+	
+		<label for='photoname'>照片标题</label><widget id="photoname"/><br />
+		
+		<label for='photoalbum'>所属相册</label><widget id="photoalbum"/><br />
+		
+		<label for='photodescription'>照片描述</label><widget id="photodescription"/><br />
+		
+		<label for='photoupdate'>上传图片</label><widget id="photoupdate"/><br />
+		
+		<input type='submit' value='提交图片'/>
+	</form>
+	<views />
+</div>

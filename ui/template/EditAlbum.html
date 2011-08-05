@@ -1,0 +1,12 @@
+<div class="editAlbum">
+	<msgqueue for="$theController->messageQueue()" />
+	<form id="editAlbumForm" method='post'>
+		<label for='albumname'>相册标题</label><widget id="albumname"/><br />
+		
+		<label for='albumdescription'>相册描述</label><widget id="albumdescription"/><br />
+		
+		<widget id="albumedit"/><label for='albumedit'>删除相册</label><br />
+		
+		<input type='submit' value='提交'/>
+	</form>
+</div>

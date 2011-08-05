@@ -1,0 +1,21 @@
+<div class="photoManage">
+	<msgqueue for="$theController->messageQueue()" />
+	<form id="photoManageForm" method='post'>
+		<foreach for='$arrPhotos' key='nKey' item='aPhoto'>
+			<div class='photoDiv'>
+				<div class='photoFace'>
+					<a href="?c=album.photoView&pid={=$aPhoto['pid']}"><img src="{=$aPhoto['file']}" alt=''/></a>
+				</div>
+				<div class='photoInfo'>
+					<ul>
+						<li><a href="?c=album.photoView&pid={=$aPhoto['pid']}">{=$aPhoto['title']}</a></li>
+						<li>{=date("Y-m-d H:i:s",$aPhoto['createTime'])}</li>
+						<li>{=$aPhoto['owner.username']}</li>
+						<li>{=$aPhoto['bytes']}字节</li>
+					</ul>
+				</div>
+			</div>
+		</foreach>
+		<input type='submit' value='提交'/>
+	</form>
+</div>

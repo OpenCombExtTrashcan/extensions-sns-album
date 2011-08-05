@@ -22,58 +22,30 @@ use jc\db\DB;                                   //数据库类
 
 class AlbumManage extends Controller {
     protected function init() {
-        //创建默认视图
-        $this->createFormView("PhotoManage");
-
-		//相册ID
-		$this->nAid = 0;
-		if($this->aParams->has('aid')){
-			$this->nAid = (int)$this->aParams->get('aid');
-			$this->viewPhotoManage->variables()->set('nAidOfThisAlbum',$this->nAid) ;
-		}else{
-			$this->messageQueue()->create( Message::error,'没有选中相册' );
-		}
-		
-		//如果已经登录,就把当前的uid录入到uid字段
-		$this->nUid = 0;
-		if( IdManager::fromSession()->currentId() ){
-			$this->nUid = IdManager::fromSession()->currentId()->userId() ;
-		}
-		
-        //当前用户选定的相册下都有哪些图片
-		$this->createModel('photo',array('owner'),true);
-		$this->viewPhotoManage->setModel($this->modelPhoto);
-		$this->modelPhoto->setLimit(-1);
-		$this->modelPhoto->load(array($this->nUid, $this->nAid ),array('uid' , 'aid'));
-		//取得图片信息,尤其是路径
-		$aStoreForlder = $this->application()->fileSystem()->findFolder('/data/public/album');
-		$arrPhotos = array();
-		foreach( $this->modelPhoto->childIterator() as $aModelPhoto)
-		{
-			$aModelPhoto['file'] = $aStoreForlder->findFile($aModelPhoto['file'])->httpUrl();
-			array_push($arrPhotos, $aModelPhoto);
-		}
-		$this->viewPhotoManage->variables()->set('arrPhotos',$arrPhotos) ;
-		
+    	$this->createView('AlbumManage');
+    	
+		$aEditAlbum = new EditAlbum($this->aParams);
+		$aPhotoManage = new PhotoManage($this->aParams);
+		$this->add($aEditAlbum);
+		$this->add($aPhotoManage);
     }
     
     public function process() {
     	//必须登录,不登录不让玩
 		$this->requireLogined() ;
 		
-		//是否有目标相册的所有权
-		$bManageAccess = false;
-		$this->createModel('album',array(), true);
-		$this->modelAlbum->load();
-		$aTargetAlbumModel = $this->modelAlbum->findChildBy($this->nAid);
-		if( $this->nUid == $aTargetAlbumModel['uid'] )
-		{
-			$bManageAccess = true;
-		}
-		$this->viewPhotoManage->variables()->set('bManageAccess',$bManageAccess) ;
-		
-		$this->viewPhotoManage->exchangeData ( DataExchanger::MODEL_TO_WIDGET );
-		
+//		//是否有目标相册的所有权
+//		$bManageAccess = false;
+//		$this->createModel('album',array(), true);
+//		$this->modelAlbum->load();
+//		$aTargetAlbumModel = $this->modelAlbum->findChildBy($this->nAid);
+//		if( $this->nUid == $aTargetAlbumModel['uid'] )
+//		{
+//			$bManageAccess = true;
+//		}
+//		$this->viewPhotoManage->variables()->set('bManageAccess',$bManageAccess) ;
+//		
+//		$this->viewPhotoManage->exchangeData ( DataExchanger::MODEL_TO_WIDGET );
     }
 }
 
