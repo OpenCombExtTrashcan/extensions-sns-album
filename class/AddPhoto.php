@@ -22,11 +22,18 @@ use jc\db\DB;                                   //数据库类
 
 class AddPhoto extends Controller {
     protected function init() {
-        //是否登陆
-//		if(!IdManager::fromSession()->currentId())
-//		{
-//		    echo "请先登陆";
-//		}
+    	
+		$this->nUid = 0;
+    	//如果已经登录,就把当前的uid录入到uid字段
+		if( IdManager::fromSession()->currentId() ){
+			$this->nUid = IdManager::fromSession()->currentId()->userId() ;
+		}
+		
+		//如果是针对某个相册的添加图片请求
+		$this->nAid = 0;
+		if($this->aParams->has('aid')){
+			$this->nAid = $this->aParams->get('aid');
+		}
 
         //创建默认视图
 		$this->createFormView("AddPhoto");
@@ -35,7 +42,7 @@ class AddPhoto extends Controller {
 		$this->createModel('album',array(),true);
 		$this->viewAddPhoto->setModel($this->modelPhoto);
 //		$this->modelAlbum->setLimit(-1);
-		$this->modelAlbum->load(array(0),'uid');
+		$this->modelAlbum->load(array($this->nUid),'uid');
 //		$this->modelAlbum->printStruct();
 		$arrOptions = array(array('请选择相册...', 0 , true));
 		foreach( $this->modelAlbum->childIterator() as $aModelAlbum)
@@ -49,10 +56,14 @@ class AddPhoto extends Controller {
 		
 		$photoalbum = new Select ( 'photoalbum', '所属相册' );
 		$photoalbum->addOptionByArray($arrOptions);
+		//如果是针对某个相册的添加图片请求, 自动帮助用户选择对应的相册
+		if($this->nAid > 0){
+			$photoalbum->setValue($this->nAid);
+		}
 		$this->viewAddPhoto->addWidget( $photoalbum , 'aid')->dataVerifiers ()->add ( NotEmpty::singleton (), "所属相册" );
 		
 		$photoDescription = new Text('photodescription','照片描述','',TEXT::multiple);
-		$this->viewAddPhoto->addWidget ( $photoDescription ,'description');
+		$this->viewAddPhoto->addWidget ( $photoDescription ,'discription');
         
 		$uploadForlder = $this->application()->fileSystem()->findFolder('/data/public/album');
 		$photoupdate = new File ( 'photoupdate','图片上传',$uploadForlder );
@@ -62,29 +73,50 @@ class AddPhoto extends Controller {
     }
     
     public function process() {
+    	//必须登录,不登录不让玩
+		$this->requireLogined() ;
+    	
     	if ($this->viewAddPhoto->isSubmit ( $this->aParams )) {
 			do {
+			
 				$this->viewAddPhoto->loadWidgets ( $this->aParams );
 				if (! $this->viewAddPhoto->verifyWidgets ()) {
-//					$aMsgQueue = $this->messageQueue ();
 					break ;
+				}
+				
+				//是否有目标相册的所有权
+				$aSelectAlbumModel = $this->modelAlbum->findChildBy($this->aParams->get('photoalbum'));
+				if( $this->nUid != $aSelectAlbumModel['uid'] )
+				{
+					$this->permissionDenied('没有权限',array()) ;
 				}
 				
 				$this->viewAddPhoto->exchangeData ( DataExchanger::WIDGET_TO_MODEL );
 				try{
 					
-					//如果是在新建相册,就带上一个创建时间
+					//如果是在新建照片,就带上一个创建时间
 					if(!$this->aParams->has('pid')){
-						$this->modelAlbum->createTime = time() ;
+						$this->modelPhoto->createTime = time() ;
 					}
 					
 					//如果已经登录,就把当前的uid录入到uid字段,但事实上,编辑表单是需要权限的,所以在权限做好以后应该省略判断
 					if( IdManager::fromSession()->currentId() && $uidFromSession = IdManager::fromSession()->currentId()->userId() ){
-						$this->modelAlbum->uid = $uidFromSession;
+						$this->modelPhoto->uid = $uidFromSession;
 					}
 					
+					//记录文件大小
+					if($this->aParams->has('photoupdate')){
+						$this->modelPhoto->bytes = $this->viewAddPhoto->widget('photoupdate')->value()->length();
+					}
 					
 					if($this->modelPhoto->save()){
+						
+						//更新相册总大小
+						$aSelectAlbumModel->bytes = $aSelectAlbumModel->bytes + $this->modelPhoto->bytes;
+						if(!$aSelectAlbumModel->save()){
+							throw new Exception('更新相册总大小失败!');
+						}
+						
 						$this->viewAddPhoto->hideForm();
 						$this->messageQueue()->create( Message::success, "表单提交完成" );
 					}else{

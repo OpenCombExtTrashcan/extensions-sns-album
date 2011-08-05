@@ -1,0 +1,30 @@
+<div class="photoList">
+
+	<div class='navForPhotoList'>
+		<a href="?c=album.albumList" >返回相册列表</a><br />
+		<if '$bManageAccess'>
+			<a href="/?c=album.addPhoto&aid={=$nAidOfThisAlbum}">上传新照片到此相册</a>
+		</if>
+		<br />
+		<br />
+	</div>
+
+	<msgqueue for="$theController->messageQueue()" />
+	
+	<foreach for='$arrPhotos' key='nKey' item='aPhoto'>
+		<div class='photoDiv'>
+			<div class='photoFace'>
+				<a href="?c=album.photoView&pid={=$aPhoto['pid']}"><img src="{=$aPhoto['file']}" alt=''/></a>
+			</div>
+			<div class='photoInfo'>
+				<ul>
+					<li><a href="?c=album.photoView&pid={=$aPhoto['pid']}">{=$aPhoto['title']}</a></li>
+					<li>{=date("Y-m-d H:i:s",$aPhoto['createTime'])}</li>
+					<li>{=$aPhoto['owner.username']}</li>
+					<li>{=$aPhoto['bytes']}字节</li>
+				</ul>
+			</div>
+		</div>
+	</foreach>
+	<views />
+</div>

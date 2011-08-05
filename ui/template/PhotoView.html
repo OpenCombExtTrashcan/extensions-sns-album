@@ -1,0 +1,26 @@
+<div class="photoView">
+
+	<msgqueue for="$theController->messageQueue()" />
+	
+	<div class='navForPhotoView'>
+		<a href="?c=album.photoList&aid={=$aPhoto['aid']}" >返回相册</a>
+		 | <a href='#' >上一张</a>
+		 | <a href='#' >下一张</a>
+	</div>
+	
+	<div class='photoDiv'>
+		<div class='photo'>
+			<img src="{=$aPhoto['file']}" alt=''/>
+		</div>
+		
+		<div class='photoInfo'>
+			<ul>
+				<li>{=$aPhoto['title']}</li>
+				<li>{=date("Y-m-d H:i:s",$aPhoto['createTime'])}</li>
+				<li>{=$aPhoto['owner.username']}</li>
+				<li>{=$aPhoto['bytes']}字节</li>
+			</ul>
+		</div>
+	</div>
+	<views />
+</div>

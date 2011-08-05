@@ -11,12 +11,19 @@ class Album extends Extension
 	public function load()
 	{
 		// 定义ORM
-        $this->defineOrm(PrototypeAssociationMap::singleton()) ;
+		$this->defineOrm(PrototypeAssociationMap::singleton()) ;
+		
+		$this->application()->accessRouter()->addController("oc\\ext\\album\\AlbumList",'albumList');
+		
+		$this->application()->accessRouter()->addController("oc\\ext\\album\\PhotoList",'photoList');
+		
+		$this->application()->accessRouter()->addController("oc\\ext\\album\\PhotoView",'photoView');
         
+		$this->application()->accessRouter()->addController("oc\\ext\\album\\AddPhoto",'addPhoto');
         
-        $this->application()->accessRouter()->addController("oc\\ext\\album\\AddPhoto",'addPhoto');
+		$this->application()->accessRouter()->addController("oc\\ext\\album\\AddAlbum",'addAlbum');
         
-        $this->application()->accessRouter()->addController("oc\\ext\\album\\AddAlbum",'addAlbum');
+//		$this->application()->accessRouter()->setDefaultController('albumList') ;
 	}
 	
 	/**

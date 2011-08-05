@@ -22,11 +22,6 @@ use jc\db\DB;                                   //数据库类
 
 class AddAlbum extends Controller {
     protected function init() {
-        //是否登陆
-//		if(!IdManager::fromSession()->currentId())
-//		{
-//		    echo "请先登陆";
-//		}
 
         //创建默认视图
         $this->createFormView("AddAlbum");
@@ -43,6 +38,9 @@ class AddAlbum extends Controller {
     }
     
     public function process() {
+    	//必须登录,不登录不让玩
+		$this->requireLogined() ;
+		
     	if ($this->viewAddAlbum->isSubmit ( $this->aParams )) {
     		
 			do {
@@ -55,7 +53,7 @@ class AddAlbum extends Controller {
 				$this->viewAddAlbum->exchangeData ( DataExchanger::WIDGET_TO_MODEL );
 				try{
 					//如果是在新建相册,就带上一个创建时间
-					if(!$this->aParams->has('pid')){
+					if(!$this->aParams->has('aid')){
 						$this->modelAlbum->createTime = time() ;
 					}
 					
