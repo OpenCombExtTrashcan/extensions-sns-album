@@ -23,38 +23,38 @@ use jc\db\DB;                                   //数据库类
 class AlbumManage extends Controller {
     protected function init() {
         //创建默认视图
-        $this->createView("PhotoList");
+        $this->createFormView("PhotoManage");
 
-        $this->nAid = 0;
-        //页面参数
-        if($this->aParams->has('aid')){
-        	$this->nAid = (int)$this->aParams->get('aid');
-        	$this->viewPhotoList->variables()->set('nAidOfThisAlbum',$this->nAid) ;
+		//相册ID
+		$this->nAid = 0;
+		if($this->aParams->has('aid')){
+			$this->nAid = (int)$this->aParams->get('aid');
+			$this->viewPhotoManage->variables()->set('nAidOfThisAlbum',$this->nAid) ;
 		}else{
 			$this->messageQueue()->create( Message::error,'没有选中相册' );
 		}
 		
+		//如果已经登录,就把当前的uid录入到uid字段
 		$this->nUid = 0;
-    	//如果已经登录,就把当前的uid录入到uid字段
 		if( IdManager::fromSession()->currentId() ){
 			$this->nUid = IdManager::fromSession()->currentId()->userId() ;
 		}
 		
-        //model
-        $this->createModel('photo',array('owner'),true);
-        $this->viewPhotoList->setModel($this->modelPhoto);
-        $this->modelPhoto->setLimit(-1);
-		$this->modelPhoto->load(array($this->nUid, $this->nAid ),array('uid' , 'aid'));   //15  通过session得到用户uid
-
+        //当前用户选定的相册下都有哪些图片
+		$this->createModel('photo',array('owner'),true);
+		$this->viewPhotoManage->setModel($this->modelPhoto);
+		$this->modelPhoto->setLimit(-1);
+		$this->modelPhoto->load(array($this->nUid, $this->nAid ),array('uid' , 'aid'));
+		//取得图片信息,尤其是路径
 		$aStoreForlder = $this->application()->fileSystem()->findFolder('/data/public/album');
-		
-        $arrPhotos = array();
-    	foreach( $this->modelPhoto->childIterator() as $aModelPhoto)
+		$arrPhotos = array();
+		foreach( $this->modelPhoto->childIterator() as $aModelPhoto)
 		{
 			$aModelPhoto['file'] = $aStoreForlder->findFile($aModelPhoto['file'])->httpUrl();
 			array_push($arrPhotos, $aModelPhoto);
 		}
-		$this->viewPhotoList->variables()->set('arrPhotos',$arrPhotos) ;
+		$this->viewPhotoManage->variables()->set('arrPhotos',$arrPhotos) ;
+		
     }
     
     public function process() {
@@ -70,7 +70,10 @@ class AlbumManage extends Controller {
 		{
 			$bManageAccess = true;
 		}
-		$this->viewPhotoList->variables()->set('bManageAccess',$bManageAccess) ;
+		$this->viewPhotoManage->variables()->set('bManageAccess',$bManageAccess) ;
+		
+		$this->viewPhotoManage->exchangeData ( DataExchanger::MODEL_TO_WIDGET );
+		
     }
 }
 
