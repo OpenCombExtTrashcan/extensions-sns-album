@@ -24,6 +24,11 @@ use jc\db\DB;                                   //数据库类
 
 class EditAlbum extends Controller {
     protected function init() {
+
+		if(!$this->aParams->has('aid')){
+			throw new Exception('编辑相册功能需要提供相册的主键作为参数');
+		}
+		
     	//创建默认视图
         $this->createFormView("EditAlbum");
         
@@ -33,19 +38,14 @@ class EditAlbum extends Controller {
 		$albumdescription = new Text('albumdescription','相册描述','',TEXT::multiple);
 		$this->viewEditAlbum->addWidget ( $albumdescription ,'description')->dataVerifiers ()->add ( Length::flyweight(array(0,255)));
 		
-		$albumedit = new CheckBtn('albumedit','删除相册',null,CheckBtn::checkbox);
+		$albumedit = new CheckBtn('albumdelete','删除相册',null,CheckBtn::checkbox);
 		$this->viewEditAlbum->addWidget ( $albumedit );
-		
+    	
 		//数据库中的数据
-    	if($this->aParams->has('aid')){
-			$nAid = $this->aParams->has('aid');
-			$this->createModel('album',array(),false,'albumToEdit');
-			$this->modelAlbumToEdit->load(array($nAid),'aid');
-			$this->viewEditAlbum->setModel($this->modelAlbumToEdit);
-			$this->viewEditAlbum->exchangeData ( DataExchanger::MODEL_TO_WIDGET );
-		}else{
-			throw new Exception('编辑相册功能需要提供相册的主键作为参数');
-		}
+		$this->createModel('album');
+		$this->modelAlbum->load($this->aParams['aid'],'aid');
+		$this->viewEditAlbum->setModel($this->modelAlbum);
+		$this->viewEditAlbum->exchangeData( DataExchanger::MODEL_TO_WIDGET );
     }
     
     public function process() {
@@ -56,10 +56,11 @@ class EditAlbum extends Controller {
     	if( IdManager::fromSession()->currentId() && $uidFromSession = IdManager::fromSession()->currentId()->userId() ){
 			$this->nUid = $uidFromSession;
 		}
-		if( $this->nUid != $this->modelAlbumToEdit['uid'] )
+		if( $this->nUid != $this->modelAlbum['uid'] )
 		{
 			$this->permissionDenied('没有权限',array()) ;
 		}
+		
 		
     	if ($this->viewEditAlbum->isSubmit ( $this->aParams )) {
 			do {
@@ -70,15 +71,15 @@ class EditAlbum extends Controller {
 				
 				$this->viewEditAlbum->exchangeData ( DataExchanger::WIDGET_TO_MODEL );
 				try{
-					if( $this->aParams->has['albumedit'] && $this->aParams->get['albumedit'] == true){
-						if(!$this->modelAlbumToEdit->delete()){
+					if( $this->aParams->has['albumdelete'] && $this->aParams->get['albumdelete'] == true){
+						if(!$this->modelAlbum->delete()){
 //							$this->messageQueue()->create( Message::error, "删除相册失败" );
 							throw new Exception('删除相册失败');
 						}else{
 							$this->messageQueue()->create( Message::success, "删除相册完成" );
 							break;
 						}
-					}else if($this->modelAlbumToEdit->save()){
+					}else if($this->modelAlbum->save()){
 						$this->viewEditAlbum->hideForm();
 						$this->messageQueue()->create( Message::success, "表单提交完成" );
 						break;
@@ -92,7 +93,6 @@ class EditAlbum extends Controller {
 			} while ( 0 );
 		}
 		else {
-			
 		}
     }
 }
