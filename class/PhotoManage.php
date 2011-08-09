@@ -1,6 +1,8 @@
 <?php
 namespace oc\ext\album;
 
+use jc\mvc\view\widget\CheckBtn;
+
 use jc\lang\Exception;
 
 use oc\mvc\controller\Controller;               //控制器类
@@ -58,21 +60,49 @@ class PhotoManage extends Controller {
     }
     
     public function process() {
-    	//必须登录,不登录不让玩
+		//必须登录,不登录不让玩
 		$this->requireLogined() ;
 		
-		//是否有目标相册的所有权
-		$bManageAccess = false;
-		$this->createModel('album',array(), true);
-		$this->modelAlbum->load();
-		$aTargetAlbumModel = $this->modelAlbum->findChildBy($this->nAid);
-		if( $this->nUid == $aTargetAlbumModel['uid'] )
-		{
-			$bManageAccess = true;
+    	//是否有目标相册的所有权
+    	if( IdManager::fromSession()->currentId() && $uidFromSession = IdManager::fromSession()->currentId()->userId() ){
+			$this->nUid = $uidFromSession;
 		}
-		$this->viewPhotoManage->variables()->set('bManageAccess',$bManageAccess) ;
+		if( $this->nUid != $this->modelPhoto['uid'] )
+		{
+			$this->permissionDenied('没有权限',array()) ;
+		}
 		
-		$this->viewPhotoManage->exchangeData ( DataExchanger::MODEL_TO_WIDGET );
+		$this->createModel('album');
+		$this->modelPhoto->load($this->aParams['aid'],'aid');
+		$this->viewPhotoManage->setModel($this->modelPhoto);
+		
+    	if ($this->viewPhotoManage->isSubmit ( $this->aParams )) {
+				try{
+					if( $this->aParams->has('photoDelete') && count($this->aParams->get('photoDelete')) > 0){
+						//删除操作
+						if(!$this->modelPhoto->delete()){
+//							$this->messageQueue()->create( Message::error, "删除相册失败" );
+							throw new Exception('删除相册失败');
+						}else{
+							$this->viewPhotoManage->hideForm();
+							$this->messageQueue()->create( Message::success, "相册已被删除" );
+							break;
+						}
+					}else if($this->modelPhoto->save()){
+						$this->viewPhotoManage->hideForm();
+						$this->messageQueue()->create( Message::success, "相册修改完成" );
+						break;
+					}else{
+						$this->messageQueue()->create( Message::error, "相册修改失败" );
+						break;
+					}
+				}catch (Exception $e){
+					$this->messageQueue()->create( Message::error, "相册修改失败" );
+				}
+		}
+		else {
+			
+		}
     }
 }
 

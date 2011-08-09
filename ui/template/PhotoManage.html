@@ -15,6 +15,9 @@
 						<li>{=date("Y-m-d H:i:s",$aPhoto['createTime'])}</li>
 						<li>{=$aPhoto['owner.username']}</li>
 						<li>{=$aPhoto['bytes']}字节</li>
+						<li><a href="?c=album.editPhoto&pid={=$aPhoto['pid']}">编辑照片内容</a></li>
+						<li><input id='photoDelete_{=$aPhoto['pid']}' name='photoDelete[]' type='checkbox' value='photoDelete_{=$aPhoto['pid']}'/><label for='photoDelete_{=$aPhoto['pid']}'>删除照片</label></li>
+						<li><input id='photoAlbumFace_{=$aPhoto['pid']}' name='photoAlbumFace' type='checkbox' value='photoAlbumFace_{=$aPhoto['pid']}'/><label for='photoAlbumFace_{=$aPhoto['pid']}'>设置相册封面</label></li>
 					</ul>
 				</div>
 			</div>

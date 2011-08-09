@@ -34,18 +34,18 @@ class AlbumManage extends Controller {
     	//必须登录,不登录不让玩
 		$this->requireLogined() ;
 		
-//		//是否有目标相册的所有权
-//		$bManageAccess = false;
-//		$this->createModel('album',array(), true);
-//		$this->modelAlbum->load();
-//		$aTargetAlbumModel = $this->modelAlbum->findChildBy($this->nAid);
-//		if( $this->nUid == $aTargetAlbumModel['uid'] )
-//		{
-//			$bManageAccess = true;
-//		}
-//		$this->viewPhotoManage->variables()->set('bManageAccess',$bManageAccess) ;
-//		
-//		$this->viewPhotoManage->exchangeData ( DataExchanger::MODEL_TO_WIDGET );
+		//是否有目标相册的所有权
+		$this->createModel('album');
+		$this->modelAlbum->load($this->aParams->get('aid'),'aid');
+		
+    	//是否有目标相册的所有权
+    	if( IdManager::fromSession()->currentId() && $uidFromSession = IdManager::fromSession()->currentId()->userId() ){
+			$this->nUid = $uidFromSession;
+		}
+		if( $this->nUid != $this->modelAlbum['uid'] )
+		{
+			$this->permissionDenied('没有权限',array()) ;
+		}
     }
 }
 

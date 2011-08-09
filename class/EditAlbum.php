@@ -38,14 +38,16 @@ class EditAlbum extends Controller {
 		$albumdescription = new Text('albumdescription','相册描述','',TEXT::multiple);
 		$this->viewEditAlbum->addWidget ( $albumdescription ,'description')->dataVerifiers ()->add ( Length::flyweight(array(0,255)));
 		
-		$albumedit = new CheckBtn('albumdelete','删除相册',null,CheckBtn::checkbox);
+		$albumedit = new CheckBtn('albumdelete','删除相册','albumdelete',CheckBtn::checkbox);
 		$this->viewEditAlbum->addWidget ( $albumedit );
     	
-		//数据库中的数据
+    	//数据库中的数据
 		$this->createModel('album');
 		$this->modelAlbum->load($this->aParams['aid'],'aid');
 		$this->viewEditAlbum->setModel($this->modelAlbum);
-		$this->viewEditAlbum->exchangeData( DataExchanger::MODEL_TO_WIDGET );
+		if (!$this->viewEditAlbum->isSubmit ( $this->aParams )) {
+			$this->viewEditAlbum->exchangeData( DataExchanger::MODEL_TO_WIDGET );
+		}
     }
     
     public function process() {
@@ -61,7 +63,6 @@ class EditAlbum extends Controller {
 			$this->permissionDenied('没有权限',array()) ;
 		}
 		
-		
     	if ($this->viewEditAlbum->isSubmit ( $this->aParams )) {
 			do {
 				$this->viewEditAlbum->loadWidgets ( $this->aParams );
@@ -71,28 +72,38 @@ class EditAlbum extends Controller {
 				
 				$this->viewEditAlbum->exchangeData ( DataExchanger::WIDGET_TO_MODEL );
 				try{
-					if( $this->aParams->has['albumdelete'] && $this->aParams->get['albumdelete'] == true){
+					if( $this->aParams->has('albumdelete') && $this->aParams->get('albumdelete') == 'albumdelete'){
+						//如果相册内的图片数量>0 , 提示用户自己删除这些照片以后再回来删除相册
+						$this->createModel('photo' ,array() , true);
+						$this->modelPhoto->load($this->aParams['aid'],'aid');
+						if( $this->modelPhoto->childrenCount() > 0 ){
+							$this->messageQueue()->create( Message::error, "必须是空相册才能删除,请先处理相册内的照片" );
+							break;
+						}
+						//删除操作
 						if(!$this->modelAlbum->delete()){
 //							$this->messageQueue()->create( Message::error, "删除相册失败" );
 							throw new Exception('删除相册失败');
 						}else{
-							$this->messageQueue()->create( Message::success, "删除相册完成" );
+							$this->viewEditAlbum->hideForm();
+							$this->messageQueue()->create( Message::success, "相册已被删除" );
 							break;
 						}
 					}else if($this->modelAlbum->save()){
 						$this->viewEditAlbum->hideForm();
-						$this->messageQueue()->create( Message::success, "表单提交完成" );
+						$this->messageQueue()->create( Message::success, "相册修改完成" );
 						break;
 					}else{
-						$this->messageQueue()->create( Message::error, "表单提交失败" );
+						$this->messageQueue()->create( Message::error, "相册修改失败" );
 						break;
 					}
 				}catch (Exception $e){
-					$this->messageQueue()->create( Message::error, "表单提交失败" );
+					$this->messageQueue()->create( Message::error, "相册修改失败" );
 				}
 			} while ( 0 );
 		}
 		else {
+			
 		}
     }
 }
