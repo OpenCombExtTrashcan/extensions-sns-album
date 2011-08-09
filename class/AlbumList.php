@@ -26,16 +26,22 @@ class AlbumList extends Controller {
         $this->createView("AlbumList");
         
     	$this->nUid = 0;
-    	//如果已经登录,就把当前的uid录入到uid字段
-		if( IdManager::fromSession()->currentId() ){
+    	$this->bManageAccess = false;
+    	if($this->aParams->has('uid')){   //查看指定用户的相册
+    		$this->nUid = $this->aParams->get('uid');
+    	}else if( IdManager::fromSession()->currentId() ){  //如果是查看自己的相册,就把当前session中uid录入到uid字段
 			$this->nUid = IdManager::fromSession()->currentId()->userId() ;
+			$this->bManageAccess = true;
+		}else{
+			$this->messageQueue()->create(Message::error, '没有指定显示谁的相册');
+			return;
 		}
 		
         //model
         $this->createModel('album',array('owner'),true);
         $this->viewAlbumList->setModel($this->modelAlbum);
         $this->modelAlbum->setLimit(-1);
-		$this->modelAlbum->load(array($this->nUid),'uid');   //15  通过session得到用户uid
+		$this->modelAlbum->load($this->nUid,'uid');
 //		$this->modelAlbum->printStruct();
         $arrAlbums = array();
     	foreach( $this->modelAlbum->childIterator() as $aModelAlbum)
@@ -44,11 +50,26 @@ class AlbumList extends Controller {
 		}
 		$this->viewAlbumList->variables()->set('arrAlbums',$arrAlbums) ;
 		
+		//封面
+		$this->createModel('photo');
+		$this->modelPhoto->load($this->nUid,'uid');
+		$this->viewAlbumList->variables()->set('aFaceModel',$this->modelPhoto) ;
     }
     
     public function process() {
     	//必须登录,不登录不让玩
 //		$this->requireLogined() ;
+
+    	//是否有目标相册的所有权
+//		$bManageAccess = false;
+//		$this->createModel('album',array(), true);
+//		$this->modelAlbum->load();
+//		$aTargetAlbumModel = $this->modelAlbum->findChildBy($this->nAid);
+//		if( $this->nUid == $aTargetAlbumModel['uid'] )
+//		{
+//			$bManageAccess = true;
+//		}
+		$this->viewAlbumList->variables()->set('bManageAccess',$this->bManageAccess) ;
     }
 }
 

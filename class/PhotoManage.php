@@ -96,7 +96,7 @@ class PhotoManage extends Controller {
 				$nPid = $this->aParams->get('photoAlbumFace');
 				$this->modelAlbum['coverPid'] = (int)$nPid[0];
 				if($this->modelAlbum->save()){
-					$this->viewEditAlbum->hideForm();
+					$this->viewPhotoManage->hideForm();
 					$this->messageQueue()->create( Message::success, "设置相册封面完成" );
 					return;
 				}else{

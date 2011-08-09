@@ -78,7 +78,6 @@ class AddPhoto extends Controller {
     	
     	if ($this->viewAddPhoto->isSubmit ( $this->aParams )) {
 			do {
-			
 				$this->viewAddPhoto->loadWidgets ( $this->aParams );
 				if (! $this->viewAddPhoto->verifyWidgets ()) {
 					$this->photoupdate->setValue(null);

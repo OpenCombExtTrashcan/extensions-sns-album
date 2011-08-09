@@ -46,6 +46,7 @@ class AlbumManage extends Controller {
 		{
 			$this->permissionDenied('没有权限',array()) ;
 		}
+		
     }
 }
 
