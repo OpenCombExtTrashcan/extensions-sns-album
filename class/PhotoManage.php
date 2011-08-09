@@ -43,7 +43,7 @@ class PhotoManage extends Controller {
 		}
 		
         //当前用户选定的相册下都有哪些图片
-    		$this->createModel('photo',array('owner'),true);
+        $this->createModel('photo',array('owner'),true);
 		$this->viewPhotoManage->setModel($this->modelPhoto);
 		$this->modelPhoto->setLimit(-1);
 		$this->modelPhoto->load(array($this->nUid, $this->nAid ),array('uid' , 'aid'));
@@ -70,41 +70,43 @@ class PhotoManage extends Controller {
 //		}
 		
     	if ($this->viewPhotoManage->isSubmit ( $this->aParams )) {
-					if( $this->aParams->has('photoDelete') && count($this->aParams->get('photoDelete')) > 0){
-						//删除操作
-						$uploadForlder = $this->application()->fileSystem()->findFolder('/data/public/album');
-						foreach($this->aParams->get('photoDelete') as $key=>$sPid){
-							$nPid = (int)$sPid;
-							if(($sPhotoPath = $this->modelPhoto->findChildBy($nPid)->data('file')) && $this->modelPhoto->findChildBy($nPid)->delete()){
-								$aPhoto = $uploadForlder->findFile($sPhotoPath);
-								if(!$aPhoto->delete()){
-									throw new Exception('删除照片失败1');
-								}
-							}else{
-								throw new Exception('删除照片失败2');
-							}
-						}
-						$this->viewPhotoManage->hideForm();
-						$this->messageQueue()->create( Message::success, "照片已被删除" );
-						return;
-					}else if($this->aParams->has('photoAlbumFace') && count($this->aParams->get('photoAlbumFace')) > 0){
-						$this->createModel('album');
-						$this->modelAlbum->load($this->aParams['aid'],'aid');
-						
-						//设置封面操作
-						$nPid = $this->aParams->get('photoAlbumFace');
-						$this->modelAlbum['coverPid'] = (int)$nPid[0];
-						if($this->modelAlbum->save()){
-							$this->viewEditAlbum->hideForm();
-							$this->messageQueue()->create( Message::success, "设置相册封面完成" );
+			if( $this->aParams->has('photoDelete') && count($this->aParams->get('photoDelete')) > 0){
+				//删除操作
+				foreach($this->aParams->get('photoDelete') as $key=>$sPid){
+					$nPid = (int)$sPid;
+					if(($sPhotoPath = $this->modelPhoto->findChildBy($nPid)->data('file')) && $this->modelPhoto->findChildBy($nPid)->delete()){
+						$aPhoto = $this->aStoreForlder->findFile($sPhotoPath);
+						if(!$aPhoto->delete()){
+							$this->messageQueue()->create( Message::error, "相册修改失败" );
 							return;
-						}else{
-							throw new Exception('设置相册封面失败');
 						}
 					}else{
-						$this->messageQueue()->create( Message::error, "相册修改失败3" );
+						$this->messageQueue()->create( Message::error, "相册修改失败" );
 						return;
 					}
+				}
+				$this->viewPhotoManage->hideForm();
+				$this->messageQueue()->create( Message::success, "照片已被删除" );
+				return;
+			}else if($this->aParams->has('photoAlbumFace') && count($this->aParams->get('photoAlbumFace')) > 0){
+				$this->createModel('album');
+				$this->modelAlbum->load($this->aParams['aid'],'aid');
+				
+				//设置封面操作
+				$nPid = $this->aParams->get('photoAlbumFace');
+				$this->modelAlbum['coverPid'] = (int)$nPid[0];
+				if($this->modelAlbum->save()){
+					$this->viewEditAlbum->hideForm();
+					$this->messageQueue()->create( Message::success, "设置相册封面完成" );
+					return;
+				}else{
+					$this->messageQueue()->create( Message::error, "相册修改失败" );
+					return;
+				}
+			}else{
+				$this->messageQueue()->create( Message::error, "相册修改失败" );
+				return;
+			}
 		}
 		else {
 			

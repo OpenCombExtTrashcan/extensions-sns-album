@@ -52,7 +52,7 @@ class AddPhoto extends Controller {
 		}
         
 		$photoName = new Text('photoname','照片标题','',TEXT::single);
-		$this->viewAddPhoto->addWidget ( $photoName ,'title')->dataVerifiers ()->add ( NotEmpty::singleton() );
+		$this->viewAddPhoto->addWidget ( $photoName ,'title');
 		
 		$photoalbum = new Select ( 'photoalbum', '所属相册' );
 		$photoalbum->addOptionByArray($arrOptions);
@@ -66,10 +66,10 @@ class AddPhoto extends Controller {
 		$this->viewAddPhoto->addWidget ( $photoDescription ,'discription');
         
 		$uploadForlder = $this->application()->fileSystem()->findFolder('/data/public/album');
-		$photoupdate = new File ( 'photoupdate','图片上传',$uploadForlder );
+		$this->photoupdate = new File ( 'photoupdate','图片上传',$uploadForlder );
 //		$photoupdate->addVerifier(FileSize::flyweight(array(200,200000)));
 //		$photoupdate->addVerifier(FileExt::flyweight(array(array('jpg','png','bmp'),true)));
-		$this->viewAddPhoto->addWidget ( $photoupdate ,'file');
+		$this->viewAddPhoto->addWidget ( $this->photoupdate ,'file')->dataVerifiers ()->add ( NotEmpty::singleton (), "照片" );
     }
     
     public function process() {
@@ -81,6 +81,7 @@ class AddPhoto extends Controller {
 			
 				$this->viewAddPhoto->loadWidgets ( $this->aParams );
 				if (! $this->viewAddPhoto->verifyWidgets ()) {
+					$this->photoupdate->setValue(null);
 					break ;
 				}
 				
@@ -106,7 +107,12 @@ class AddPhoto extends Controller {
 					
 					//记录文件大小
 					if($this->aParams->has('photoupdate')){
-						$this->modelPhoto->bytes = $this->viewAddPhoto->widget('photoupdate')->value()->length();
+						if(($aFile = $this->viewAddPhoto->widget('photoupdate')->value()) != null){
+							$this->modelPhoto->bytes = $aFile->length();
+						}else{
+							$this->messageQueue()->create( Message::error, "照片提交失败" );
+							return ;
+						}
 					}
 					
 					if($this->modelPhoto->save()){
@@ -118,19 +124,17 @@ class AddPhoto extends Controller {
 						}
 						
 						$this->viewAddPhoto->hideForm();
-						$this->messageQueue()->create( Message::success, "表单提交完成" );
+						$this->messageQueue()->create( Message::success, "照片提交完成" );
 					}else{
-						$this->messageQueue()->create( Message::error, "表单提交失败" );
+						$this->messageQueue()->create( Message::error, "照片提交失败" );
 					}
 				}catch (Exception $e){
-					$this->messageQueue()->create( Message::error, "表单提交失败" );
+					$this->messageQueue()->create( Message::error, "照片提交失败" );
 				}
 				
 			} while ( 0 );
 		}
 		else {
-			
-			
 		}
     }
 }

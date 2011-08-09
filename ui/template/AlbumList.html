@@ -1,7 +1,6 @@
 <div class="albumList">
 	<div class='navForAlbumList'>
 		<a href="/?c=album.addAlbum">建立新相册</a><br/>
-		<a href="/?c=album.addPhoto">上传新照片</a>
 		<br/>
 		<br/>
 	</div>
@@ -16,7 +15,8 @@
 					<li>{=date("Y-m-d H:i:s",$aAlbum['createTime'])}</li>
 					<li>{=$aAlbum['owner.username']}</li>
 					<li>{=$aAlbum['bytes']}字节</li>
-					<li><a href="?c=album.albumManage&aid={=$aAlbum['aid']}">管理相册</a></li>
+					<li><a href="/?c=album.addPhoto&aid={=$aAlbum['aid']}">上传新照片</a></li>
+					<li><a href="/?c=album.albumManage&aid={=$aAlbum['aid']}">管理相册</a></li>
 				</ul>
 			</div>
 		</div>

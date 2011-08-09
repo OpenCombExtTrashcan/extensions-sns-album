@@ -7,7 +7,7 @@
 		<foreach for='$arrPhotos' key='nKey' item='aPhoto'>
 			<div class='photoDiv'>
 				<div class='photoFace'>
-					<a href="?c=album.photoView&pid={=$aPhoto['pid']}"><img src="{=$aPhoto['file']}" alt=''/></a>
+					<a href="?c=album.photoView&pid={=$aPhoto['pid']}"><img src="{=$aPhoto['imgUrl']}"/></a>
 				</div>
 				<div class='photoInfo'>
 					<ul>

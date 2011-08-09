@@ -48,8 +48,7 @@ class AlbumList extends Controller {
     
     public function process() {
     	//必须登录,不登录不让玩
-		$this->requireLogined() ;
-		
+//		$this->requireLogined() ;
     }
 }
 
