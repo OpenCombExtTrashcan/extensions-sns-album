@@ -44,7 +44,7 @@ class AddPhoto extends Controller {
 //		$this->modelAlbum->setLimit(-1);
 		$this->modelAlbum->load(array($this->nUid),'uid');
 //		$this->modelAlbum->printStruct();
-		$arrOptions = array(array('请选择相册...', 0 , true));
+		$arrOptions = array(array('请选择相册...', '' , true));
 		foreach( $this->modelAlbum->childIterator() as $aModelAlbum)
 		{
 			$arrAOption = array($aModelAlbum->title,$aModelAlbum->aid,false);
@@ -74,7 +74,7 @@ class AddPhoto extends Controller {
     
     public function process() {
     	//必须登录,不登录不让玩
-		$this->requireLogined() ;
+		$this->requireLogined('请先登录') ;
     	
     	if ($this->viewAddPhoto->isSubmit ( $this->aParams )) {
 			do {

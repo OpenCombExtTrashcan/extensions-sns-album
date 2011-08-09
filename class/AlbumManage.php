@@ -32,7 +32,7 @@ class AlbumManage extends Controller {
     
     public function process() {
     	//必须登录,不登录不让玩
-		$this->requireLogined() ;
+		$this->requireLogined('请先登录') ;
 		
 		//是否有目标相册的所有权
 		$this->createModel('album');

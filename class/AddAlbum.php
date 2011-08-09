@@ -39,7 +39,7 @@ class AddAlbum extends Controller {
     
     public function process() {
     	//必须登录,不登录不让玩
-		$this->requireLogined() ;
+		$this->requireLogined('请先登录') ;
 		
 		if ($this->viewAddAlbum->isSubmit ( $this->aParams )) {
     		
@@ -64,12 +64,12 @@ class AddAlbum extends Controller {
 					
 					if($this->modelAlbum->save()){
 						$this->viewAddAlbum->hideForm();
-						$this->messageQueue()->create( Message::success, "表单提交完成" );
+						$this->messageQueue()->create( Message::success, "新建相册完成" );
 					}else{
-						$this->messageQueue()->create( Message::error, "表单提交失败" );
+						$this->messageQueue()->create( Message::error, "新建相册失败" );
 					}
 				}catch (Exception $e){
-					$this->messageQueue()->create( Message::error, "表单提交失败" );
+					$this->messageQueue()->create( Message::error, "新建相册失败" );
 				}
 			} while ( 0 );
 		}

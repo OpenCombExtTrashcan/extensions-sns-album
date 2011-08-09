@@ -52,7 +52,7 @@ class EditAlbum extends Controller {
     
     public function process() {
     	//必须登录,不登录不让玩
-		$this->requireLogined() ;
+		$this->requireLogined('请先登录') ;
 		
     	//是否有目标相册的所有权
     	if( IdManager::fromSession()->currentId() && $uidFromSession = IdManager::fromSession()->currentId()->userId() ){
@@ -86,7 +86,8 @@ class EditAlbum extends Controller {
 							throw new Exception('删除相册失败');
 						}else{
 							$this->viewEditAlbum->hideForm();
-							$this->messageQueue()->create( Message::success, "相册已被删除" );
+//							$this->messageQueue()->create( Message::success, "相册已被删除" );
+							header('Location: /?c=album.albumList');
 							break;
 						}
 					}else if($this->modelAlbum->save()){

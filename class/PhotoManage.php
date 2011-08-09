@@ -43,62 +43,68 @@ class PhotoManage extends Controller {
 		}
 		
         //当前用户选定的相册下都有哪些图片
-		$this->createModel('photo',array('owner'),true);
+    		$this->createModel('photo',array('owner'),true);
 		$this->viewPhotoManage->setModel($this->modelPhoto);
 		$this->modelPhoto->setLimit(-1);
 		$this->modelPhoto->load(array($this->nUid, $this->nAid ),array('uid' , 'aid'));
 		//取得图片信息,尤其是路径
-		$aStoreForlder = $this->application()->fileSystem()->findFolder('/data/public/album');
+		$this->aStoreForlder = $this->application()->fileSystem()->findFolder('/data/public/album');
 		$arrPhotos = array();
 		foreach( $this->modelPhoto->childIterator() as $aModelPhoto)
 		{
-			$aModelPhoto['file'] = $aStoreForlder->findFile($aModelPhoto['file'])->httpUrl();
+			$aModelPhoto['imgUrl'] = $this->aStoreForlder->findFile($aModelPhoto['file'])->httpUrl();
 			array_push($arrPhotos, $aModelPhoto);
 		}
 		$this->viewPhotoManage->variables()->set('arrPhotos',$arrPhotos) ;
-		
     }
     
     public function process() {
 		//必须登录,不登录不让玩
-		$this->requireLogined() ;
+		$this->requireLogined('请先登录') ;
 		
     	//是否有目标相册的所有权
-    	if( IdManager::fromSession()->currentId() && $uidFromSession = IdManager::fromSession()->currentId()->userId() ){
-			$this->nUid = $uidFromSession;
-		}
-		if( $this->nUid != $this->modelPhoto['uid'] )
-		{
-			$this->permissionDenied('没有权限',array()) ;
-		}
-		
-		$this->createModel('album');
-		$this->modelPhoto->load($this->aParams['aid'],'aid');
-		$this->viewPhotoManage->setModel($this->modelPhoto);
+    	//因为init部分根据用户的sessionID来确定显示什么图片给页面,所以这里无所谓是否判断用户权限
+//		if( $this->nUid != $this->modelAlbum['uid'] )
+//		{
+//			$this->permissionDenied('没有权限',array()) ;
+//		}
 		
     	if ($this->viewPhotoManage->isSubmit ( $this->aParams )) {
-				try{
 					if( $this->aParams->has('photoDelete') && count($this->aParams->get('photoDelete')) > 0){
 						//删除操作
-						if(!$this->modelPhoto->delete()){
-//							$this->messageQueue()->create( Message::error, "删除相册失败" );
-							throw new Exception('删除相册失败');
-						}else{
-							$this->viewPhotoManage->hideForm();
-							$this->messageQueue()->create( Message::success, "相册已被删除" );
-							break;
+						$uploadForlder = $this->application()->fileSystem()->findFolder('/data/public/album');
+						foreach($this->aParams->get('photoDelete') as $key=>$sPid){
+							$nPid = (int)$sPid;
+							if(($sPhotoPath = $this->modelPhoto->findChildBy($nPid)->data('file')) && $this->modelPhoto->findChildBy($nPid)->delete()){
+								$aPhoto = $uploadForlder->findFile($sPhotoPath);
+								if(!$aPhoto->delete()){
+									throw new Exception('删除照片失败1');
+								}
+							}else{
+								throw new Exception('删除照片失败2');
+							}
 						}
-					}else if($this->modelPhoto->save()){
 						$this->viewPhotoManage->hideForm();
-						$this->messageQueue()->create( Message::success, "相册修改完成" );
-						break;
+						$this->messageQueue()->create( Message::success, "照片已被删除" );
+						return;
+					}else if($this->aParams->has('photoAlbumFace') && count($this->aParams->get('photoAlbumFace')) > 0){
+						$this->createModel('album');
+						$this->modelAlbum->load($this->aParams['aid'],'aid');
+						
+						//设置封面操作
+						$nPid = $this->aParams->get('photoAlbumFace');
+						$this->modelAlbum['coverPid'] = (int)$nPid[0];
+						if($this->modelAlbum->save()){
+							$this->viewEditAlbum->hideForm();
+							$this->messageQueue()->create( Message::success, "设置相册封面完成" );
+							return;
+						}else{
+							throw new Exception('设置相册封面失败');
+						}
 					}else{
-						$this->messageQueue()->create( Message::error, "相册修改失败" );
-						break;
+						$this->messageQueue()->create( Message::error, "相册修改失败3" );
+						return;
 					}
-				}catch (Exception $e){
-					$this->messageQueue()->create( Message::error, "相册修改失败" );
-				}
 		}
 		else {
 			
