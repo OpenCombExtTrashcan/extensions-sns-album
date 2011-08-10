@@ -38,22 +38,17 @@ class AlbumList extends Controller {
 		}
 		
         //model
-        $this->createModel('album',array('owner'),true);
+        $this->createModel('album',array('owner','cover'),true);
         $this->viewAlbumList->setModel($this->modelAlbum);
         $this->modelAlbum->setLimit(-1);
 		$this->modelAlbum->load($this->nUid,'uid');
 //		$this->modelAlbum->printStruct();
-        $arrAlbums = array();
-    	foreach( $this->modelAlbum->childIterator() as $aModelAlbum)
-		{
-			array_push($arrAlbums, $aModelAlbum);
-		}
-		$this->viewAlbumList->variables()->set('arrAlbums',$arrAlbums) ;
-		
-		//封面
-		$this->createModel('photo');
-		$this->modelPhoto->load($this->nUid,'uid');
-		$this->viewAlbumList->variables()->set('aFaceModel',$this->modelPhoto) ;
+//        $arrAlbums = array();
+//    	foreach( $this->modelAlbum->childIterator() as $aModelAlbum)
+//		{
+//			array_push($arrAlbums, $aModelAlbum);
+//		}
+//		$this->viewAlbumList->variables()->set('arrAlbums',$arrAlbums) ;
     }
     
     public function process() {

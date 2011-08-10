@@ -1,3 +1,5 @@
+<css src='album.css' />
+
 <div class="albumList">
 	<div class='navForAlbumList'>
 		<if $bManageAccess>
@@ -7,24 +9,25 @@
 		<br/>
 	</div>
 	<msgqueue for="$theController->messageQueue()" />
-	<foreach for='$arrAlbums' key='nKey' item='aAlbum'>
+	<model:foreach>
 		<div class='albumDiv'>
 			<div class='albumFace'>
-				<a href="?c=album.photoList&aid={=$aAlbum['aid']}"><img src="{=$aFaceModel->findChildBy['coverPid']}" alt=''/></a>
+				<a href="?c=album.photoList&aid={=$theModel['aid']}"><img width="150" height="150" src="data/public/album/{=$theModel['cover.file']}" alt=''/></a>
 			</div>
 			<div class='albumInfo'>
 				<ul>
-					<li><a href="?c=album.photoList&aid={=$aAlbum['aid']}">{=$aAlbum['title']}</a></li>
-					<li>{=date("Y-m-d H:i:s",$aAlbum['createTime'])}</li>
-					<li>{=$aAlbum['owner.username']}</li>
-					<li>{=$aAlbum['bytes']}字节</li>
+					<li><a href="?c=album.photoList&aid={=$theModel['aid']}">{=$theModel['title']}</a></li>
+					<li>{=date("Y-m-d H:i:s",$theModel['createTime'])}</li>
+					<li>{=$theModel['owner.username']}</li>
+					<li>{=$theModel['bytes']}字节</li>
 					<if $bManageAccess>
-						<li><a href="/?c=album.addPhoto&aid={=$aAlbum['aid']}">上传新照片</a></li>
-						<li><a href="/?c=album.albumManage&aid={=$aAlbum['aid']}">管理相册</a></li>
+						<li><a href="/?c=album.addPhoto&aid={=$theModel['aid']}">上传新照片</a></li>
+						<li><a href="/?c=album.albumManage&aid={=$theModel['aid']}">管理相册</a></li>
 					</if>
 				</ul>
 			</div>
 		</div>
-	</foreach>
+	</model:foreach>
+	<div class='block'></div>
 	<views />
 </div>

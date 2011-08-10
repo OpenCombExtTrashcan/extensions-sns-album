@@ -1,5 +1,5 @@
+<css src='album.css' />
 <div class="photoList">
-
 	<div class='navForPhotoList'>
 		<a href="?c=album.albumList" >返回相册列表</a><br />
 		<if '$bManageAccess'>
@@ -14,7 +14,7 @@
 	<foreach for='$arrPhotos' key='nKey' item='aPhoto'>
 		<div class='photoDiv'>
 			<div class='photoFace'>
-				<a href="?c=album.photoView&pid={=$aPhoto['pid']}"><img src="{=$aPhoto['file']}" alt=''/></a>
+				<a href="?c=album.photoView&pid={=$aPhoto['pid']}"><img width="150" height="150" src="{=$aPhoto['file']}" alt=''/></a>
 			</div>
 			<div class='photoInfo'>
 				<ul>

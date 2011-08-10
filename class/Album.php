@@ -45,6 +45,14 @@ class Album extends Extension
 //                	'name'
 //					'columns'
 //					'deviceP'
+					'hasOne' => array(
+                		array(
+        					'prop' => 'cover', //属性名
+        					'fromk' => 'coverPid', //主键
+        					'tok' => 'pid', //外键
+                            'model' => 'photo'  //模型名称
+        				),
+                	),
                     'hasMany' => array(
         				array(
         					'prop' => 'photos', //属性名
@@ -75,6 +83,12 @@ class Album extends Extension
                             'tok' => 'aid', //从外键
                             'model' => 'album', //模型名称
                         ),
+                		array(
+        					'prop' => 'cover', //属性名
+        					'fromk' => 'pid', //主键
+        					'tok' => 'coverPid', //外键
+                            'model' => 'photo'  //模型名称
+        				),
                         array(
                             'prop' => 'owner', //属性名
                             'fromk' => 'uid', //主键

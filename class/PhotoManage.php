@@ -43,19 +43,20 @@ class PhotoManage extends Controller {
 		}
 		
         //当前用户选定的相册下都有哪些图片
-        $this->createModel('photo',array('owner'),true);
+        $this->createModel('photo',array('owner','album'),true);
 		$this->viewPhotoManage->setModel($this->modelPhoto);
 		$this->modelPhoto->setLimit(-1);
 		$this->modelPhoto->load(array($this->nUid, $this->nAid ),array('uid' , 'aid'));
+//		$this->modelPhoto->printStruct();
 		//取得图片信息,尤其是路径
-		$this->aStoreForlder = $this->application()->fileSystem()->findFolder('/data/public/album');
-		$arrPhotos = array();
-		foreach( $this->modelPhoto->childIterator() as $aModelPhoto)
-		{
-			$aModelPhoto['imgUrl'] = $this->aStoreForlder->findFile($aModelPhoto['file'])->httpUrl();
-			array_push($arrPhotos, $aModelPhoto);
-		}
-		$this->viewPhotoManage->variables()->set('arrPhotos',$arrPhotos) ;
+//		$this->aStoreForlder = $this->application()->fileSystem()->findFolder('/data/public/album');
+//		$arrPhotos = array();
+//		foreach( $this->modelPhoto->childIterator() as $aModelPhoto)
+//		{
+//			$aModelPhoto['imgUrl'] = $this->aStoreForlder->findFile($aModelPhoto['file'])->httpUrl();
+//			array_push($arrPhotos, $aModelPhoto);
+//		}
+//		$this->viewPhotoManage->variables()->set('arrPhotos',$arrPhotos) ;
     }
     
     public function process() {
