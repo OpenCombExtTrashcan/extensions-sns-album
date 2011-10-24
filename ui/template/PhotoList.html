@@ -19,9 +19,9 @@
 			<div class='photoInfo'>
 				<ul>
 					<li><a href="?c=album.photoView&pid={=$aPhoto['pid']}">{=$aPhoto['title']}</a></li>
-					<li>{=date("Y-m-d H:i:s",$aPhoto['createTime'])}</li>
-					<li>{=$aPhoto['owner.username']}</li>
-					<li>{=$aPhoto['bytes']}字节</li>
+					<li>上传时间:{=date("Y-m-d",$aPhoto['createTime'])}</li>
+					<li>作者:<a href="?c=album.albumList&uid={=$aPhoto['owner.uid']}">{=$aPhoto['owner.username']}</a></li>
+					<li>大小:{=$aPhoto['bytes']/1000}K</li>
 				</ul>
 			</div>
 		</div>

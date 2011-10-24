@@ -42,25 +42,18 @@ class PhotoView extends Controller {
         //model
 		$this->createModel('photo',array('owner'));
 		$this->viewPhotoView->setModel($this->modelPhoto);
-//        $this->modelPhoto->setLimit();
 		$this->modelPhoto->load(array($nUid , $nPid ),array('uid' , 'pid'));   //15  通过session得到用户uid
 //		$this->modelPhoto->printStruct();
 
 		$aStoreForlder = $this->application()->fileSystem()->findFolder('/data/public/album');
-//		$this->viewPhotoView->variables()->set('aStoreForlder',$aStoreForlder) ;
 		
 		$this->modelPhoto['file'] = $aStoreForlder->findFile($this->modelPhoto['file'])->httpUrl();
 		$this->viewPhotoView->variables()->set('aPhoto',$this->modelPhoto) ;
-//		var_dump($arrPhotos);
 	}
     
 	public function process() {
-		
 		//必须登录,不登录不让玩
 		$this->requireLogined() ;
-		
-		
-
 	}
 }
 

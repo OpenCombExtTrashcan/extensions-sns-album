@@ -1,8 +1,8 @@
 <?php
 namespace oc\ext\album;
 
+use jc\db\sql\Order;
 use jc\lang\Exception;
-
 use oc\mvc\controller\Controller;               //控制器类
 use oc\base\FrontFrame;                         //视图框架类
 use oc\mvc\model\db\Model;                      //模型类
@@ -25,7 +25,12 @@ class AlbumList extends Controller {
         //创建默认视图
         $this->createView("AlbumList");
         
-    	$this->nUid = 0;
+    }
+    
+    public function process() {
+    	
+    	//识别用户
+   		$this->nUid = 0;
     	$this->bManageAccess = false;
     	if($this->aParams->has('uid')){   //查看指定用户的相册
     		$this->nUid = $this->aParams->get('uid');
@@ -33,37 +38,16 @@ class AlbumList extends Controller {
 			$this->nUid = IdManager::fromSession()->currentId()->userId() ;
 			$this->bManageAccess = true;
 		}else{
-			$this->messageQueue()->create(Message::error, '没有指定显示谁的相册');
+			$this->messageQueue()->create(Message::error, '没有指定显示看谁的相册,或者未登录');
 			return;
 		}
 		
-        //model
+    	//加载model
         $this->createModel('album',array('owner','cover'),true);
         $this->viewAlbumList->setModel($this->modelAlbum);
-        $this->modelAlbum->setLimit(-1);
+        $this->modelAlbum->criteria()->setLimit(-1);
 		$this->modelAlbum->load($this->nUid,'uid');
-//		$this->modelAlbum->printStruct();
-//        $arrAlbums = array();
-//    	foreach( $this->modelAlbum->childIterator() as $aModelAlbum)
-//		{
-//			array_push($arrAlbums, $aModelAlbum);
-//		}
-//		$this->viewAlbumList->variables()->set('arrAlbums',$arrAlbums) ;
-    }
-    
-    public function process() {
-    	//必须登录,不登录不让玩
-//		$this->requireLogined() ;
-
-    	//是否有目标相册的所有权
-//		$bManageAccess = false;
-//		$this->createModel('album',array(), true);
-//		$this->modelAlbum->load();
-//		$aTargetAlbumModel = $this->modelAlbum->findChildBy($this->nAid);
-//		if( $this->nUid == $aTargetAlbumModel['uid'] )
-//		{
-//			$bManageAccess = true;
-//		}
+    	
 		$this->viewAlbumList->variables()->set('bManageAccess',$this->bManageAccess) ;
     }
 }

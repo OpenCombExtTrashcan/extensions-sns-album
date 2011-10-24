@@ -45,7 +45,8 @@ class PhotoManage extends Controller {
         //当前用户选定的相册下都有哪些图片
         $this->createModel('photo',array('owner','album'),true);
 		$this->viewPhotoManage->setModel($this->modelPhoto);
-		$this->modelPhoto->setLimit(-1);
+//		$this->modelPhoto->criteria()->order('createTime',false);
+		$this->modelPhoto->criteria()->setLimit(-1);
 		$this->modelPhoto->load(array($this->nUid, $this->nAid ),array('uid' , 'aid'));
 //		$this->modelPhoto->printStruct();
 		//取得图片信息,尤其是路径
@@ -76,7 +77,7 @@ class PhotoManage extends Controller {
 				foreach($this->aParams->get('photoDelete') as $key=>$sPid){
 					$nPid = (int)$sPid;
 					if(($sPhotoPath = $this->modelPhoto->findChildBy($nPid)->data('file')) && $this->modelPhoto->findChildBy($nPid)->delete()){
-						$aPhoto = $this->aStoreForlder->findFile($sPhotoPath);
+						$aPhoto = $this->application()->fileSystem()->findFolder('/data/public/album')->findFile($sPhotoPath);
 						if(!$aPhoto->delete()){
 							$this->messageQueue()->create( Message::error, "相册修改失败" );
 							return;

@@ -1,0 +1,32 @@
+.albumDiv{
+	width:170px;
+	height:auto;
+	float:left;
+}
+.albumDiv img{
+	padding:10px;
+}
+
+.albumDiv li{
+	padding-left:10px;
+}
+
+.photoList .photoDiv{
+	width:170px;
+	float:left;
+}
+.photoList .photoDiv img{
+	padding:10px;
+}
+
+.photoList .photoDiv li{
+	padding-left:10px;
+}
+
+.photoView{
+	width:890px;
+}
+
+.photoView .photoDiv{
+	margin: 0 auto;
+}

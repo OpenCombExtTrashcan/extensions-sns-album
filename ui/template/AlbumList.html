@@ -17,9 +17,9 @@
 			<div class='albumInfo'>
 				<ul>
 					<li><a href="?c=album.photoList&aid={=$theModel['aid']}">{=$theModel['title']}</a></li>
-					<li>{=date("Y-m-d H:i:s",$theModel['createTime'])}</li>
-					<li>{=$theModel['owner.username']}</li>
-					<li>{=$theModel['bytes']}字节</li>
+					<li>用户:<a href="/?c=album.albumList&uid={=$theModel['uid']}">{=$theModel['owner.username']}</a></li>
+					<li>大小:{=$theModel['bytes']/1000}K</li>
+					<li>创建日期:{=date("Y-m-d",$theModel['createTime'])}</li>
 					<if $bManageAccess>
 						<li><a href="/?c=album.addPhoto&aid={=$theModel['aid']}">上传新照片</a></li>
 						<li><a href="/?c=album.albumManage&aid={=$theModel['aid']}">管理相册</a></li>

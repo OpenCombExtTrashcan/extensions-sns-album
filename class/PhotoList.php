@@ -43,7 +43,8 @@ class PhotoList extends Controller {
         //model
         $this->createModel('photo',array('owner'),true);
         $this->viewPhotoList->setModel($this->modelPhoto);
-        $this->modelPhoto->setLimit(-1);
+        $this->modelPhoto->criteria()->setLimit(-1);
+//        $this->modelPhoto->criteria()->order('createTime',false);
 		$this->modelPhoto->load(array($this->nUid, $this->nAid ),array('uid' , 'aid'));   //15  通过session得到用户uid
 //		$this->modelPhoto->printStruct();
 
@@ -67,6 +68,7 @@ class PhotoList extends Controller {
 		//是否有目标相册的所有权
 		$bManageAccess = false;
 		$this->createModel('album',array(), true);
+//		$this->modelAlbum->criteria()->order('createTime',false);
 		$this->modelAlbum->load();
 		$aTargetAlbumModel = $this->modelAlbum->findChildBy($this->nAid);
 		if( $this->nUid == $aTargetAlbumModel['uid'] )

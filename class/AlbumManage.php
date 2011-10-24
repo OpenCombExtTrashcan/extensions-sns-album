@@ -36,6 +36,7 @@ class AlbumManage extends Controller {
 		
 		//是否有目标相册的所有权
 		$this->createModel('album');
+//		$this->modelAlbum->criteria()->order('createTime',false);
 		$this->modelAlbum->load($this->aParams->get('aid'),'aid');
 		
     	//是否有目标相册的所有权
