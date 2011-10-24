@@ -1,5 +1,5 @@
+<css src='album.css' />
 <div class="photoView">
-
 	<msgqueue for="$theController->messageQueue()" />
 	
 	<div class='navForPhotoView'>
@@ -12,13 +12,12 @@
 		<div class='photo'>
 			<img src="{=$aPhoto['file']}" alt=''/>
 		</div>
-		
 		<div class='photoInfo'>
 			<ul>
-				<li>{=$aPhoto['title']}</li>
-				<li>{=date("Y-m-d H:i:s",$aPhoto['createTime'])}</li>
-				<li>{=$aPhoto['owner.username']}</li>
-				<li>{=$aPhoto['bytes']}字节</li>
+				<li>名称:{=$aPhoto['title']}</li>
+				<li>上传日期:{=date("Y-m-d",$aPhoto['createTime'])}</li>
+				<li>作者:<a href="?c=album.albumList&uid={=$aPhoto['owner.uid']}">{=$aPhoto['owner.username']}</a></li>
+				<li>大小:{=$aPhoto['bytes']/1000}K</li>
 			</ul>
 		</div>
 	</div>

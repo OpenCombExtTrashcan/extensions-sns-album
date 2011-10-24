@@ -2,9 +2,12 @@
 <js src='album.js' />
 
 <div class="photoManage">
+	<hr class='line'/>
+	
 	<div class='navForPhotoManage'>
 		<a href="/?c=album.addPhoto&aid={=$theController->nAid}">上传新照片</a>
 	</div>
+	
 	<msgqueue for="$theController->messageQueue()" />
 	<form id="photoManageForm" method='post'>
 		<model:foreach>
@@ -14,10 +17,10 @@
 				</div>
 				<div class='photoInfo'>
 					<ul>
-						<li><a href="?c=album.photoView&pid={=$theModel['pid']}">{=$theModel['title']}</a></li>
-						<li>{=date("Y-m-d H:i:s",$theModel['createTime'])}</li>
-						<li>{=$theModel['owner.username']}</li>
-						<li>{=$theModel['bytes']}字节</li>
+						<li>名称:<a href="?c=album.photoView&pid={=$theModel['pid']}">{=$theModel['title']}</a></li>
+						<li>上传时间:{=date("Y-m-d",$theModel['createTime'])}</li>
+						<li>作者:{=$theModel['owner.username']}</li>
+						<li>大小:{=$theModel['bytes']/1000}K</li>
 						<li><a href="?c=album.editPhoto&pid={=$theModel['pid']}">编辑照片内容</a></li>
 						<li><input id='photoDelete_{=$theModel['pid']}' name='photoDelete[]' type='checkbox' value='{=$theModel['pid']}'/><label for='photoDelete_{=$theModel['pid']}'>删除照片</label></li>
 						<li><input id='photoAlbumFace_{=$theModel['pid']}' name='photoAlbumFace[]' type='radio' {? echo($theModel['album.coverPid'] == $theModel['pid'] ? "checked='checked'" : "" )} value='{=$theModel['pid']}'/><label for='photoAlbumFace_{=$theModel['pid']}'>相册封面</label></li>
@@ -26,7 +29,7 @@
 			</div>
 		</model:foreach>
 		<if {=$theModel->childrenCount() > 0} >
-		<input type='submit' value='提交'/>
+		<input class='submit' type='submit' value='提交'/>
 		</if>
 	</form>
 </div>

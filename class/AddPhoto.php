@@ -41,7 +41,6 @@ class AddPhoto extends Controller {
 		$this->createModel('photo');
 		$this->createModel('album',array(),true);
 		$this->viewAddPhoto->setModel($this->modelPhoto);
-//		$this->modelAlbum->setLimit(-1);
 		$this->modelAlbum->load(array($this->nUid),'uid');
 //		$this->modelAlbum->printStruct();
 		$arrOptions = array(array('请选择相册...', '' , true));
@@ -52,7 +51,7 @@ class AddPhoto extends Controller {
 		}
         
 		$photoName = new Text('photoname','照片标题','',TEXT::single);
-		$this->viewAddPhoto->addWidget ( $photoName ,'title');
+		$this->viewAddPhoto->addWidget ( $photoName ,'title')->dataVerifiers ()->add ( NotEmpty::singleton (), "照片标题不能为空" );
 		
 		$photoalbum = new Select ( 'photoalbum', '所属相册' );
 		$photoalbum->addOptionByArray($arrOptions);
@@ -60,7 +59,7 @@ class AddPhoto extends Controller {
 		if($this->nAid > 0){
 			$photoalbum->setValue($this->nAid);
 		}
-		$this->viewAddPhoto->addWidget( $photoalbum , 'aid')->dataVerifiers ()->add ( NotEmpty::singleton (), "所属相册" );
+		$this->viewAddPhoto->addWidget( $photoalbum , 'aid')->dataVerifiers ()->add ( NotEmpty::singleton (), "所属相册不能为空" );
 		
 		$photoDescription = new Text('photodescription','照片描述','',TEXT::multiple);
 		$this->viewAddPhoto->addWidget ( $photoDescription ,'discription');
@@ -69,7 +68,7 @@ class AddPhoto extends Controller {
 		$this->photoupdate = new File ( 'photoupdate','图片上传',$uploadForlder );
 //		$photoupdate->addVerifier(FileSize::flyweight(array(200,200000)));
 //		$photoupdate->addVerifier(FileExt::flyweight(array(array('jpg','png','bmp'),true)));
-		$this->viewAddPhoto->addWidget ( $this->photoupdate ,'file')->dataVerifiers ()->add ( NotEmpty::singleton (), "照片" );
+		$this->viewAddPhoto->addWidget ( $this->photoupdate ,'file')->dataVerifiers ()->add ( NotEmpty::singleton (), "照片不能为空" );
     }
     
     public function process() {

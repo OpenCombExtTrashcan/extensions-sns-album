@@ -1,33 +1,37 @@
-<css src='album.css' />
+<css src='style.css' />
+<js src='jquery-1.6.2.min.js'/>
+<js src='cufon-yui.js'/>
+<js src='jquery.transform-0.8.0.min.js'/>
+<js src='photoshow.js'/>
 
-<div class="albumList">
-	<div class='navForAlbumList'>
-		<if $bManageAccess>
-			<a href="/?c=album.addAlbum">建立新相册</a><br/>
-		</if>
-		<br/>
-		<br/>
-	</div>
-	<msgqueue for="$theController->messageQueue()" />
-	<model:foreach>
-		<div class='albumDiv'>
-			<div class='albumFace'>
-				<a href="?c=album.photoList&aid={=$theModel['aid']}"><img width="150" height="150" src="data/public/album/{=$theModel['cover.file']}" alt=''/></a>
+<div id="pp_gallery" class="pp_gallery">
+	<div id="pp_loading" class="pp_loading"></div>
+	<div id="pp_next" class="pp_next"></div>
+	<div id="pp_prev" class="pp_prev"></div>
+	<div id="pp_thumbContainer">
+		<model:foreach>
+		<div class="album">
+			<foreach for='$theModel->child("photos")->childIterator()' item='photo'>
+				<div class="content">
+					<img src="data/public/album/{=$photo['file']}" alt="data/public/album/{=$photo['file']}"/>
+					<span>{=$photo['title']}</span>
+				</div>
+			</foreach>
+			<div class="descr">
+				{=$theModel['title']}
 			</div>
-			<div class='albumInfo'>
-				<ul>
-					<li><a href="?c=album.photoList&aid={=$theModel['aid']}">{=$theModel['title']}</a></li>
-					<li>{=date("Y-m-d H:i:s",$theModel['createTime'])}</li>
-					<li>{=$theModel['owner.username']}</li>
-					<li>{=$theModel['bytes']}字节</li>
-					<if $bManageAccess>
-						<li><a href="/?c=album.addPhoto&aid={=$theModel['aid']}">上传新照片</a></li>
-						<li><a href="/?c=album.albumManage&aid={=$theModel['aid']}">管理相册</a></li>
-					</if>
-				</ul>
-			</div>
+			<if $bManageAccess>
+			<div class="pp_manage"><a href="/?c=album.albumManage&aid={=$theModel['aid']}">管理相册</a></div>
+			</if>
 		</div>
-	</model:foreach>
-	<div class='block'></div>
-	<views />
+		</model:foreach>
+		<div id="pp_back" class="pp_back">返回相册列表</div>
+		<if $bManageAccess><div id="pp_new"><a href="/?c=album.addAlbum">建立新相册</a></div></if>
+	</div>
 </div>
+<div>
+    <span class="reference">
+        <a href="/?c=login">返回我的微博</a>
+    </span>
+</div>
+<views />

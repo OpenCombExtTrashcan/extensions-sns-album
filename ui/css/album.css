@@ -1,0 +1,87 @@
+label{
+	color:#333;
+	font-size:14px;
+}
+
+a{
+	color:#333;
+	font-size:14px;
+}
+
+.albumDiv{
+	width:170px;
+	height:auto;
+	float:left;
+}
+.albumDiv img{
+	padding:10px;
+}
+
+.albumDiv li{
+	padding-left:10px;
+}
+
+.photoList .photoDiv{
+	width:170px;
+	float:left;
+}
+.photoList .photoDiv img{
+	padding:10px;
+}
+
+.photoList .photoDiv li{
+	padding-left:10px;
+}
+
+.photoView{
+	width:890px;
+}
+
+.photoView .photoDiv{
+	margin: 0 auto;
+}
+
+.photoManage .photoDiv{
+	width:170px;
+	float:left;
+}
+
+.photoManage .line{
+	width:800px;
+}
+
+.submit{
+	width:70px;
+	height:25px;
+	display:block;
+	clear:both;
+}
+
+.navForPhotoManage a{
+	color:white;
+	text-align:center;
+	padding:5px;
+	margin:5px 0 ;
+	display:block;
+	height:30px;
+	width:80px;
+	line-height:30px;
+	text-shadow:0px 0px 1px #fff;
+	-moz-box-shadow:1px 1px 4px #000;
+	-webkit-box-shadow:1px 1px 4px #000;
+	box-shadow:1px 1px 4px #000;
+	text-transform:uppercase;
+	text-decoration:none;
+	background:#222;
+}
+
+.navForPhotoManage a{
+	text-transform:uppercase;
+	text-decoration:none;
+}
+
+
+#albumdescription{
+	width:200px;
+	height:100px;
+}

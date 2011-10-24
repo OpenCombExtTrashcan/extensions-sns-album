@@ -75,7 +75,8 @@ class EditAlbum extends Controller {
 					if( $this->aParams->has('albumdelete') && $this->aParams->get('albumdelete') == 'albumdelete'){
 						//如果相册内的图片数量>0 , 提示用户自己删除这些照片以后再回来删除相册
 						$this->createModel('photo' ,array() , true);
-						$this->modelPhoto->load($this->aParams['aid'],'aid');
+//						$this->modelAlbum->criteria()->order('createTime',false);
+						$this->modelAlbum->load($this->aParams['aid'],'aid');
 						if( $this->modelPhoto->childrenCount() > 0 ){
 							$this->messageQueue()->create( Message::error, "必须是空相册才能删除,请先处理相册内的照片" );
 							break;

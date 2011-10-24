@@ -41,7 +41,7 @@ class EditPhoto extends Controller {
 		$this->createModel('photo');
 		$this->createModel('album',array(),true);
 		$this->viewAddPhoto->setModel($this->modelPhoto);
-//		$this->modelAlbum->setLimit(-1);
+//		$this->modelAlbum->criteria()->order('createTime',false);
 		$this->modelAlbum->load(array($this->nUid),'uid');
 //		$this->modelAlbum->printStruct();
 		$arrOptions = array(array('请选择相册...', 0 , true));
