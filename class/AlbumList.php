@@ -28,6 +28,9 @@ class AlbumList extends Controller {
     }
     
     public function process() {
+    	//必须登录,不登录不让玩
+		$this->requireLogined('请先登录') ;
+    	
     	//识别用户
    		$this->nUid = 0;
     	$this->bManageAccess = false;
