@@ -2,9 +2,10 @@
 namespace oc\ext\album;
 
 use jc\db\sql\Order;
+use jc\mvc\view\View;
 use jc\lang\Exception;
 use oc\mvc\controller\Controller;               //控制器类
-use oc\base\FrontFrame;                         //视图框架类
+use oc\ext\album\FrontFrame;                         //视图框架类
 use oc\mvc\model\db\Model;                      //模型类
 use jc\mvc\view\widget\Text;                    //文本组件类
 use jc\mvc\view\widget\File;
@@ -24,11 +25,9 @@ class AlbumList extends Controller {
     protected function init() {
         //创建默认视图
         $this->createView("AlbumList");
-        
     }
     
     public function process() {
-    	
     	//识别用户
    		$this->nUid = 0;
     	$this->bManageAccess = false;
@@ -43,13 +42,18 @@ class AlbumList extends Controller {
 		}
 		
     	//加载model
-        $this->createModel('album',array('owner','cover'),true);
+        $this->createModel('album',array('owner','cover','photos'),true);
         $this->viewAlbumList->setModel($this->modelAlbum);
+        
         $this->modelAlbum->criteria()->setLimit(-1);
 		$this->modelAlbum->load($this->nUid,'uid');
-    	
+//    	$this->modelAlbum->printStruct();
 		$this->viewAlbumList->variables()->set('bManageAccess',$this->bManageAccess) ;
     }
+    
+	public function createFrame()
+    {
+    	return new FrontFrame();
+    }
 }
-
 ?>
