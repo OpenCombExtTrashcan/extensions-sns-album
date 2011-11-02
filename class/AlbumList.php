@@ -32,7 +32,7 @@ class AlbumList extends Controller {
 //		$this->requireLogined('请先登录') ;
     	if( !IdManager::fromSession()->currentId() )
     	{
-    		Relocater::locate("/?c=login&from=album.albumList", "请登录",0);
+    		Relocater::locate("/?c=album.login", "请登录",0);
     	}
     	
     	//识别用户
