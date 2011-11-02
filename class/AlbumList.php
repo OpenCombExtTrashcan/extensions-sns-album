@@ -60,7 +60,11 @@ class AlbumList extends Controller {
     
 	public function createFrame()
     {
-    	return new FrontFrame();
+    	$aFrame = new FrontFrame();
+    	
+    	$aFrame->mainView()->variables()->set('sTitle','相册') ;
+    	
+    	return $aFrame ;
     }
 }
 ?>

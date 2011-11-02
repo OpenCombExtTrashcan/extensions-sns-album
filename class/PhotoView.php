@@ -55,6 +55,15 @@ class PhotoView extends Controller {
 		//必须登录,不登录不让玩
 		$this->requireLogined() ;
 	}
+	
+public function createFrame()
+    {
+    	$aFrame = new FrontFrame();
+    	
+    	$aFrame->mainView()->variables()->set('sTitle','相册') ;
+    	
+    	return $aFrame ;
+    }
 }
 
 ?>

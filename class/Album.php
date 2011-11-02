@@ -29,6 +29,10 @@ class Album extends Extension
 		$this->application()->accessRouter()->addController("oc\\ext\\album\\PhotoManage",'photoManage');
         
 		$this->application()->accessRouter()->addController("oc\\ext\\album\\EditPhoto",'editPhoto');
+		
+		$this->application()->accessRouter()->addController("oc\\ext\\album\\Login",'login');
+		
+		$this->application()->accessRouter()->addController("oc\\ext\\album\\Logout",'logout');
 	}
 	
 	/**

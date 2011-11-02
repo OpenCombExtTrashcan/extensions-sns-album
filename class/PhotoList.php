@@ -77,6 +77,15 @@ class PhotoList extends Controller {
 		}
 		$this->viewPhotoList->variables()->set('bManageAccess',$bManageAccess) ;
     }
+    
+public function createFrame()
+    {
+    	$aFrame = new FrontFrame();
+    	
+    	$aFrame->mainView()->variables()->set('sTitle','相册') ;
+    	
+    	return $aFrame ;
+    }
 }
 
 ?>
