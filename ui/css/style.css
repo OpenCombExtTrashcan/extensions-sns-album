@@ -232,6 +232,7 @@ h1{
 }
 
 .login .username input , .login .password input{
+	width:200px;
 	display:block;
 	border:0px;
 	padding:0px;
