@@ -133,6 +133,14 @@ class EditPhoto extends Controller {
 			
 		}
     }
+public function createFrame()
+    {
+    	$aFrame = new FrontFrame();
+    	
+    	$aFrame->mainView()->variables()->set('sTitle','相册') ;
+    	
+    	return $aFrame ;
+    }
 }
 
 ?>

@@ -1,0 +1,56 @@
+<css src='style.css' />
+<js src='jquery-1.6.2.min.js'/>
+
+<script type='text/javascript'>
+jQuery(function(){
+	//登录框自动剧中
+	$('#albumLogin').css({
+		"left":$('body').width()/2 - $('#albumLogin').width()/2 +'px',
+		"top":'100px'
+	});
+});
+</script>
+
+<if "is_object($aCurrentId=\jc\auth\IdManager::fromSession()->currentId())">
+<div class="logined">
+	<div class="userInfo">
+       	<widget ins="oc\ext\coreuser\FaceWidget::mine()"/><!-- <img alt="" src="/platform/ui/images/viewimg/xshd01.jpg" /> -->
+           <div class="text">
+				<p>
+					<foreach for="\jc\auth\IdManager::fromSession()->iterator()" item="aId">
+							{= $aId->username() } <a href='?c=album.logout'>退出</a><br/>
+					</foreach>
+				</p>
+				
+           </div>
+           <div class="clear"></div>
+	</div>
+</div>
+<else/>
+<div id='albumLogin' class="login">
+	<form name='albumLoginForm' action="/?c=album.login" method="post">
+		{* 显示 当前视图 的消息队列 }
+		<div id='login_message'><msgqueue for="$theView" /></div>
+		<ul>
+			<li class="username">
+				<div><span>用户名</span> <msgqueue for="$theView->widget('username')" /></div>
+				<widget id="username" class="textfield"/>
+			</li>
+			<li class="password">
+				<div><span>密　码</span> <msgqueue for="$theView->widget('password')" /></div>
+				<widget id="password" class="textfield"/>
+			</li>
+		</ul>
+		<div class="remember">
+			<input type="checkbox" name="remember" id="remember" />
+			<label for="remember">记住我</label>
+		</div>
+		<div class="login_btn">
+			<a class='album_reg' href='?c=register'> < 注 册</a>
+			<!-- <a href="#" class=''>忘记密码</a> -->
+			<a class='album_login' href='#' onclick='javascript:albumLoginForm.submit();return false;'>登 录</a>
+		</div>
+		<div class='block'></div>
+	</form>
+</div>
+</if>

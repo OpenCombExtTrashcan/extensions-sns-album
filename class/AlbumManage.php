@@ -48,6 +48,14 @@ class AlbumManage extends Controller {
 			$this->permissionDenied('没有权限',array()) ;
 		}
     }
+public function createFrame()
+    {
+    	$aFrame = new FrontFrame();
+    	
+    	$aFrame->mainView()->variables()->set('sTitle','相册') ;
+    	
+    	return $aFrame ;
+    }
 }
 
 ?>
