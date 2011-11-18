@@ -18,6 +18,12 @@
 					<span>{=$photo['title']}</span>
 				</div>
 			</foreach>
+			<if '!$theModel->child("photos")->childIterator()->valid()'>
+				<div class='content'>
+					<img src="/platform/ui/images/viewimg/xshd01.jpg" alt="/platform/ui/images/viewimg/xshd01.jpg"/>
+					<span>此相册没有照片</span>
+				</div>
+			</if>
 			<div class="descr">
 				{=$theModel['title']}
 			</div>
