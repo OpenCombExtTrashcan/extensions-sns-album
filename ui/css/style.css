@@ -216,24 +216,42 @@ h1{
  */
 
 .login{
-	width:200px;
+	width:363px;
+	height:222px;
 	padding:3px 10px 5px 10px;
-	background:#111;
+	background:url(../images/login_form_bg.png);
 	-webkit-border-radius: 14px;
 	-moz-border-radius: 14px;
 	position:absolute;
 }
 
-.login .username span , .login .password span{
+#top_block{
+	width:300px;
+	height:28px;
+}
+
+.login form {
 	display:block;
+	width:260px;
+	margin: 0 auto;
+	font-family:"宋体";
+}
+
+.login form li{
+	margin: 20px 0 20px 0;
+}
+.login form label{
+	font-size:14px;
+	color:#333;
+}
+.login .username span , .login .password span{
 	padding:6px 0 0 0;
 	font-size:14px;
 	text-indent: 0.1em;
 }
 
-.login .username input , .login .password input{
+#username , #password{
 	width:200px;
-	display:block;
 	border:0px;
 	padding:0px;
 	font-size:16px;
@@ -243,6 +261,11 @@ h1{
 	background:#fff;
 	-webkit-border-radius: 3px;
 	-moz-border-radius: 3px;
+	border:#999 1px solid;
+}
+
+#username:focus, #password:focus{
+	border:#5aab85 1px solid;
 }
 
 #login_message{
@@ -257,33 +280,28 @@ h1{
 	width:65px;
 	height:25px;
 	line-height:25px;
-	background:red;
+	background:#83bfa3;
+	border:1px solid #5aab85;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
 	color:white;
 	font-weight:bold;
 	text-decoration:none;
 	text-align:center;
 	display:block;
-	margin:4px 0;
-}
-.album_reg{
-	float:left;
-	color:white;
-	background:#111;
-}
-.album_login{
 	float:right;
-	margin-right:4px;
-	-webkit-border-radius: 2px;
-	-moz-border-radius: 2px;
+	margin: 0 5px 0 5px;
 }
 
 .login .remember input{
 	display:block;
 	margin: 3px;
 	float:left;
+	margin:7px 5px 0 0;
 }
 .login .remember{
-	line-height: 20px;
+	float:right;
+	line-height: 28px;
 }
 
 div .block{
